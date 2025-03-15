@@ -1,13 +1,10 @@
-import { Configuration, OpenAIApi } from "openai"
+import { GoogleGenerativeAI } from "@google/generative-ai"
 import dotenv from "dotenv"
 
 dotenv.config()
 
-const openai = new OpenAIApi(
-    new Configuration({
-        apiKey: process.env.OPEN_API_KEY,
-    })
-)
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
+const model = genAI.getGenerativeModel({ model:"gemini-1.5-pro-002" })
 
 export const generateResume = async (req, res) => {
     try{
@@ -30,14 +27,11 @@ export const generateResume = async (req, res) => {
             
             Please format the response as a structured resume`
 
-    const response = await openai.createCompletion({
-        model: "gpt-4-turbo",
-        prompt: prompt,
-        temperature: 0.7,
-        max_tokens: 1000,
-    })
+        const result = await model.generateContent(prompt)
+        const response = result.response
 
-    res.json({ resume: response.data.choices[0].text.trim() })
+        res.json( { resume: response.text() })
+
     } catch(error){
         console.error("Error generating resume:", error)
         res.status(500).json({ error: "Internal Server Error"})
