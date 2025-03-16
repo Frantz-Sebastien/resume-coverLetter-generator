@@ -1,12 +1,12 @@
 import { useState } from "react";
 
 // Uncomment this part once you have deployed the backend
-// const API_URL =
-//     import.meta.env.MODE === "development" 
-//         ?  import.meta.env.VITE_BACKEND_URL
-//         : import.meta.env.VITE_BACKEND_URL_PROD; 
+const API_URL =
+    import.meta.env.MODE === "development" 
+        ?  import.meta.env.VITE_BACKEND_URL
+        : import.meta.env.VITE_BACKEND_URL_PROD; 
 
-const API_URL = import.meta.env.VITE_BACKEND_URL;
+// const API_URL = import.meta.env.VITE_BACKEND_URL_PROD;
 
 const ResumeGenerator = ({ formData, setResume }) => {
 
