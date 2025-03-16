@@ -1,6 +1,5 @@
 import { GoogleGenerativeAI } from "@google/generative-ai"
 import dotenv from "dotenv"
-import * as cheerio from "cheerio"
 import axios from "axios"
 
 dotenv.config()
@@ -31,12 +30,33 @@ export const generateResume = async (req, res) => {
             Please format the response as a structured resume`
 
         const result = await model.generateContent(prompt)
-        const response = result.response
+        const AIresponse = result.response
 
-        res.json( { resume: response.text() })
+        if(!result || !AIresponse){
+            throw new Error("Invalid AI response. Check Google Gemini API.")
+        }
 
-    } catch(error){
-        console.error("Error generating resume:", error)
-        res.status(500).json({ error: "Internal Server Error"})
+        const responseText = AIresponse.text()
+
+        if(!responseText){
+            throw new Error("AI Response is empty.")
+        }
+
+        res.json( { resume: responseText })
+
+    } catch (error) {
+        console.error("Error generating resume:", error);
+
+        if (error.response) {
+            // Google Gemini API errors
+            return res.status(error.response.status || 500).json({
+                error: `Gemini API Error: ${error.response.data.message || "Unknown error"}`,
+            });
+        } else if (error.message.includes("AI response is empty")) {
+            return res.status(500).json({ error: "AI did not return a valid response. Try again." });
+        } else {
+            // Generic internal server error
+            return res.status(500).json({ error: "Internal Server Error. Please try again later." });
+        }
     }
-}
+};

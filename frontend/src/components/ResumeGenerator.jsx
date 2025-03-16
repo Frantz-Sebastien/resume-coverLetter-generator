@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Form from './Form.jsx'
 
 // Uncomment this part once you have deployed the backend
 // const API_URL =
@@ -10,13 +9,16 @@ import Form from './Form.jsx'
 const API_URL = import.meta.env.VITE_BACKEND_URL;
 
 const ResumeGenerator = ({ formData, setResume }) => {
+
+  const [loading, setLoading] = useState(false)
+
   const handleGenerateResume = async () => {
     // Validate form data
     if (!formData.jobDescription || !formData.workExperience || !formData.education || !formData.aboutMe) {
       alert("Please fill out the entire form before generating the resume.");
       return;
     }
-    
+    setLoading(true)
     try {
       // Send data to backend
       const response = await fetch(`${API_URL}/api/resume`, {
@@ -35,6 +37,8 @@ const ResumeGenerator = ({ formData, setResume }) => {
       console.error("Error generating resume:", error);
       alert("There was an error generating your resume. Please try again.");
     }
+
+    setLoading(false)
   };
 
   return (
@@ -49,7 +53,7 @@ const ResumeGenerator = ({ formData, setResume }) => {
         cursor: "pointer" 
       }}
     >
-      Generate Resume
+      {loading ? "Generating..." : "Generate Resume"}
     </button>
   );
 };

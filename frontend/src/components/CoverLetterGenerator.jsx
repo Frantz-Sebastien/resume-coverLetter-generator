@@ -1,15 +1,17 @@
-import React from 'react';
+import { useState } from 'react';
 
 const API_URL = import.meta.env.VITE_BACKEND_URL;
 
 const CoverLetterGenerator = ({ formData, setCoverLetter }) => {
+    const [loading, setLoading] = useState(false)
+
   const handleGenerateCoverLetter = async () => {
     // Validate form data
     if (!formData.jobDescription || !formData.workExperience || !formData.education || !formData.aboutMe) {
       alert("Please fill out the entire form before generating the cover letter.");
       return;
     }
-    
+    setLoading(true)
     try {
       // Send data to backend
       const response = await fetch(`${API_URL}/api/cover-letter`, {
@@ -28,6 +30,7 @@ const CoverLetterGenerator = ({ formData, setCoverLetter }) => {
       console.error("Error generating cover letter:", error);
       alert("There was an error generating your cover letter. Please try again.");
     }
+    setLoading(false)
   };
 
   return (
@@ -41,8 +44,9 @@ const CoverLetterGenerator = ({ formData, setCoverLetter }) => {
         borderRadius: "5px",
         cursor: "pointer" 
       }}
-    >
-      Generate Cover Letter
+    >   
+      {loading ? "Generating..." : "Generate Cover Letter"}
+
     </button>
   );
 };
