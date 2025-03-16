@@ -8,6 +8,11 @@ const API_URL =
 
 // const API_URL = import.meta.env.VITE_BACKEND_URL_PROD;
 
+console.log("MODE:", import.meta.env.MODE);
+console.log("VITE_BACKEND_URL:", import.meta.env.VITE_BACKEND_URL);
+console.log("VITE_BACKEND_URL_PROD:", import.meta.env.VITE_BACKEND_URL_PROD);
+console.log("Final API_URL:", API_URL);
+
 const ResumeGenerator = ({ formData, setResume }) => {
 
   const [loading, setLoading] = useState(false)
