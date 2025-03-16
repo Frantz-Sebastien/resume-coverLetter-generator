@@ -1,53 +1,50 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react';
 
-const Form = ({ onSubmit }) => {
+const Form = ({ formData, onFormUpdate }) => {
+  const [localFormData, setLocalFormData] = useState(formData);
 
-    const [jobDescription, setJobDescription] = useState("")
-    const [workExperience, setWorkExperience] = useState("")
-    const [education, setEducation] = useState("")
-    const [aboutMe, setAboutMe] = useState("")
+  // Update a single field in the form
+  const handleFieldChange = (field, value) => {
+    const updatedFormData = {
+      ...localFormData,
+      [field]: value
+    };
+    setLocalFormData(updatedFormData);
+    onFormUpdate(updatedFormData);
+  };
 
-    const handleSubmit = (event) => {
-        event.preventDefault()
-        onSubmit({ jobDescription, workExperience, education, aboutMe })
-    }
+  return (
+    <form onSubmit={(e) => e.preventDefault()} style={{ maxWidth: "600px", margin: "auto" }}>
+      <textarea
+        placeholder="Copy and Paste Job Description"
+        value={localFormData.jobDescription}
+        onChange={(e) => handleFieldChange('jobDescription', e.target.value)}
+        rows={4}
+        style={{ width: "100%", marginBottom: "10px", padding: "8px" }}
+      />
+      <textarea
+        placeholder="Work Experience"
+        value={localFormData.workExperience}
+        onChange={(e) => handleFieldChange('workExperience', e.target.value)}
+        rows={4}
+        style={{ width: "100%", marginBottom: "10px", padding: "8px" }}
+      />
+      <textarea
+        placeholder="Education"
+        value={localFormData.education}
+        onChange={(e) => handleFieldChange('education', e.target.value)}
+        rows={2}
+        style={{ width: "100%", marginBottom: "10px", padding: "8px" }}
+      />
+      <textarea
+        placeholder="About Me"
+        value={localFormData.aboutMe}
+        onChange={(e) => handleFieldChange('aboutMe', e.target.value)}
+        rows={2}
+        style={{ width: "100%", marginBottom: "10px", padding: "8px" }}
+      />
+    </form>
+  );
+};
 
-    return (
-        <form onSubmit={handleSubmit} style={{ maxWidth: "600px", margin: "auto" }}>
-          <textarea
-            placeholder="Copy and Paste Job Description"
-            value={jobDescription}
-            onChange={(e) => setJobDescription(e.target.value)}
-            rows={4}
-            style={{ width: "100%", marginBottom: "10px" }}
-          />
-          <textarea
-            placeholder="Work Experience"
-            value={workExperience}
-            onChange={(e) => setWorkExperience(e.target.value)}
-            rows={4}
-            style={{ width: "100%", marginBottom: "10px" }}
-          />
-          <textarea
-            placeholder="Education"
-            value={education}
-            onChange={(e) => setEducation(e.target.value)}
-            rows={2}
-            style={{ width: "100%", marginBottom: "10px" }}
-          />
-          <textarea
-            placeholder="About Me"
-            value={aboutMe}
-            onChange={(e) => setAboutMe(e.target.value)}
-            rows={2}
-            style={{ width: "100%", marginBottom: "10px" }}
-          />
-    
-          <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
-            <button type="submit">Generate</button>
-          </div>
-        </form>
-      );
-    }
-    
-    export default Form;
+export default Form;
