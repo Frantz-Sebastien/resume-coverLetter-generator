@@ -1,10 +1,13 @@
 import { GoogleGenerativeAI } from "@google/generative-ai"
 import dotenv from "dotenv"
+import * as cheerio from "cheerio"
+import axios from "axios"
 
 dotenv.config()
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
 const model = genAI.getGenerativeModel({ model:"gemini-1.5-pro-002" })
+
 
 export const generateResume = async (req, res) => {
     try{
