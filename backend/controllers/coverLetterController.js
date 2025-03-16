@@ -28,12 +28,32 @@ export const generateCoverLetter = async (req, res) => {
             Please format the response as a structured resume`
 
         const result = await model.generateContent(prompt)
-        const response = result.response
+        const AIresponse = result.response
 
-        res.json( { coverLetter: response.text() })
+        if(!result || !AIresponse){
+            throw new Error("Invalid AI response. Check Google Gemini API.")
+        }
+
+        const responseText = AIresponse.text()
+
+        if(!responseText){
+            throw new Error("AI response is empty")
+        }
+
+        res.json( { coverLetter: responseText })
  
     } catch(error){
         console.error("Error generating cover letter:", error)
-        res.status(500).json({ error: "Internal Server Error"})
+        if (error.response) {
+            // Google Gemini API errors
+            return res.status(error.response.status || 500).json({
+                error: `Gemini API Error: ${error.response.data.message || "Unknown error"}`,
+            });
+        } else if (error.message.includes("AI response is empty")) {
+            return res.status(500).json({ error: "AI did not return a valid response. Try again." });
+        } else {
+            // Generic internal server error
+            return res.status(500).json({ error: "Internal Server Error. Please try again later." });
+        }
     }
-}
+};

@@ -18,5 +18,15 @@ app.get('/', (req, res) => {
     res.send('Resume Generator API is running...');
 });
 
+// 404 Error Handling - Handles requests to unknown endpoints
+app.use((req, res, next) => {
+    res.status(404).json({ error: "Route not found" });
+});
+
+// Global Error Handling Middleware
+app.use((err, req, res, next) => {
+    console.error("Server Error:", err.stack);
+    res.status(500).json({ error: "Internal Server Error. Please try again later." });
+});
 
 app.listen(PORT, () => console.log(`We are live at port ${PORT}!`))
